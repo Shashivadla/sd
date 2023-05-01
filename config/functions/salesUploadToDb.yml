@@ -8,7 +8,7 @@ function:
         bucket: sales-depot-dev2
         event: s3:ObjectCreated:*
         rules:
-          - prefix: RESAEBO/Incoming/
+          - prefix: RESAEBO/Incoming
           - suffix: .gz
   package:
     individually: true

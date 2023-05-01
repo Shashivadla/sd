@@ -1,6 +1,11 @@
 function:
-  handler: src/reconInsert/index.handler
+  handler: src/resaReconInsert/index.handler
   name: salesdb-recadb-streams-lambda
+  events:
+    - stream:
+        type: dynamodb
+        arn: arn:aws:dynamodb:us-east-2:083868342691:table/salesStagingTable/stream/2023-04-30T16:23:50.755
+        batchWindow: 10  
   layers:
     - !Ref SalesDepotLayerLambdaLayer
   package:
