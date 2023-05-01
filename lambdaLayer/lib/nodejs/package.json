@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.1367.0",
+    "fs": "^0.0.1-security",
+    "lodash.get": "^4.4.2",
+    "moment-timezone": "^0.5.43",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
+    "uuid": "^9.0.0",
+    "xlsx": "^0.18.5",
+    "zlib": "^1.0.5"
+  }
+}

@@ -1,0 +1,19 @@
+function:
+  handler: src/salesUploadToDb/index.handler
+  name: s3-rawdb-sales-upload-lambda
+  layers:
+    - !Ref SalesDepotLayerLambdaLayer
+  events:
+    - s3:
+        bucket: sales-depot-dev2
+        event: s3:ObjectCreated:*
+        rules:
+          - prefix: RESAEBO/Incoming/
+          - suffix: .gz
+  package:
+    individually: true
+    patterns:
+      - "!**/*"
+      - "src/salesUploadToDb/*.js"
+      - "src/shared/**"
+      # - 'node_modules/**' 

@@ -1,0 +1,18 @@
+function:
+  handler: src/monthyInvoiceUploadToDb/index.handler
+  name: s3-rawdb-monthly-invoice-lambda-dev
+  layers:
+    - !Ref SalesDepotLayerLambdaLayer
+  events:
+    - s3:
+        bucket: sales-depot-dev2
+        event: s3:ObjectCreated:*
+        rules:
+          - prefix: FFMonthlyInvoice/Incoming/
+  package:
+    individually: true
+    patterns:
+      - "!**/*"
+      - "src/monthyInvoiceUploadToDb/*.js"
+      - "src/shared/**"
+      # - 'node_modules/**'

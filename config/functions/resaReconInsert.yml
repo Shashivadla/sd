@@ -1,0 +1,11 @@
+function:
+  handler: src/reconInsert/index.handler
+  name: salesdb-recadb-streams-lambda
+  layers:
+    - !Ref SalesDepotLayerLambdaLayer
+  package:
+    individually: true
+    patterns:
+      - "!**/*"
+      - "src/resaReconInsert/*.js"
+      - "src/shared/**"

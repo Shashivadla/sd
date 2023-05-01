@@ -1,0 +1,14 @@
+{
+    "s3": {
+      "sales_depot_bucket_name": "sales-depot-dev1",
+      "sales_depot_bucket_arn": "arn:aws:s3:::sales-depot-dev1"
+    },
+    "dynamo": {
+        "monthly_invoice_table_name": "sales-depot-monthly-invoice-dev1",
+        "monthly_invoice_table_arn": "arn:aws:dynamodb:us-east-2:083868342691:table/sales-depot-monthly-invoice-dev1",
+        "monthly_invoice_table_stream_arn": "arn:aws:dynamodb:us-east-2:083868342691:table/sales-depot-monthly-invoice-dev1/stream/2023-04-27T12:28:59.059",
+        "recon_table_name": "sales-depot-recon-dev1",
+        "recon_table_arn": "arn:aws:dynamodb:us-east-2:083868342691:table/sales-depot-recon-dev1"
+      }
+  }
+  

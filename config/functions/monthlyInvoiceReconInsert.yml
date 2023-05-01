@@ -1,0 +1,17 @@
+function:
+  handler: src/monthlyInvoiceReconInsert/index.handler
+  name: rawdb-db-recon-monthly-invoice-lambda-dev
+  events:
+    - stream:
+        type: dynamodb
+        arn: arn:aws:dynamodb:us-east-2:083868342691:table/sales-depot-monthly-invoice-dev1/stream/2023-04-27T12:28:59.059
+        batchWindow: 10
+  layers:
+    - !Ref SalesDepotLayerLambdaLayer
+  package:
+    individually: true
+    patterns:
+      - "!**/*"
+      - "src/monthlyInvoiceReconInsert/*.js"
+      - "src/shared/**"
+      # - 'node_modules/**'
