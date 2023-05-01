@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 const { v4 } = require("uuid");
 const sourceTableName = 'salesStagingTable';
 const destinationTableName = 'recon-new';
-const { putItem, } = require("../shared/dynamo")
+const { putItem,getItem } = require("../shared/dynamo")
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.handler = async (event) => {
@@ -16,14 +16,22 @@ module.exports.handler = async (event) => {
                 record.dynamodb.NewImage
               );
               let data = newImage;
+         
               if(!data.sKey.includes('HEADER')){
+              
+                let item = data
+                
                 let pKey = data.pKey
+                  
                 let key ={
                     pKey:pKey,
                     sKey:"HEADER"
                 }
                 let header= await getItem("salesStagingTable",key)
+              
                 let headerItem =header.Item
+               console.log("headeritemmmmmmm",headerItem)
+               console.log("itemmmmmmmmmmm",item)
                 
                 
                   const selectedAttributes = {
@@ -35,9 +43,11 @@ module.exports.handler = async (event) => {
                     resa_Qty: item.line_item_qty,
                     resa_Net: item.line_item_retail_sale,
                     transaction_Date: headerItem.transaction_date,
-                    expiration: expiration,
+                    // expiration: expiration,
                     type: "resa"
                 };
+                console.log("imppppp",selectedAttributes)
+                   await putItem("recon-new",selectedAttributes)
               }
           }
         }));
