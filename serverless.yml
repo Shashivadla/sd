@@ -1,0 +1,93 @@
+service: sales-depot-service-bizdev
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  endpointType: regional
+  region: ${opt:region, 'us-east-2'}
+  stage: ${opt:stage, 'dev'}
+  # deploymentBucket:
+  #   name: sls-deploy-${self:custom.account}-${self:custom.region}
+  #   serverSideEncryption: AES256
+  layers:
+    - !Ref SalesDepotLayerLambdaLayer
+  environment:
+    REGION: ${self:provider.region}
+    # ACCOUNT: ${ssm:/${self:service}/${self:provider.stage}/aws.accountNumber} #${self:custom.accountNumber}
+    ENV: ${self:custom.stage}
+    # SALES_DEPOT_BUCKET: ${ssm:/${self:service}/${self:provider.stage}/s3.sales_depot_bucket_name}
+    # MONTHLY_INVOICE_TABLE: ${ssm:/${self:service}/${self:provider.stage}/dynamo.monthly_invoice_table_name}
+    # RECON_TABLE: ${ssm:/${self:service}/${self:provider.stage}/dynamo.recon_table_name}
+
+  iam:
+    role:
+      name: sales-depot-lambda-${self:provider.stage}-bizdev-role
+      statements: 
+        - Effect: "Allow"
+          Action:
+            - "logs:CreateLogGroup"
+            - "logs:CreateLogStream"
+            - "logs:PutLogEvents"
+          Resource: "*"
+        - Effect: "Allow"
+          Action:
+          - dynamodb:GetRecords
+          - dynamodb:GetShardIterator
+          - dynamodb:DescribeStream
+          - dynamodb:ListStreams
+          - dynamodb:DescribeTable
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+          - dynamodb:BatchWriteItem
+          - dynamodb:BatchGetItem
+          Resource: 
+            # - ${ssm:/${self:service}/${self:provider.stage}/dynamo.monthly_invoice_table_arn}
+            # - ${ssm:/${self:service}/${self:provider.stage}/dynamo.recon_table_arn}
+            - "arn:aws:dynamodb:us-east-2:083868342691:table/sales-depot-monthly-invoice-dev1"
+            - "arn:aws:dynamodb:us-east-2:083868342691:table/salesStagingTable"
+            - "arn:aws:dynamodb:us-east-2:083868342691:table/recon-new"
+        - Effect: "Allow"
+          Action:
+            - s3:ListBucket
+            - s3:DeleteObject
+            - s3:GetObject
+            - s3:PutObject
+          Resource: 
+            # - ${ssm:/${self:service}/${self:provider.stage}/s3.sales_depot_bucket_arn}
+            # - ${ssm:/${self:service}/${self:provider.stage}/s3.sales_depot_bucket_arn}/*
+            - "arn:aws:s3:::sales-depot-dev2"
+            - "arn:aws:s3:::sales-depot-dev2/*"
+        - Effect: "Allow"
+          Action:
+            - "lambda:InvokeFunction"
+            - "lambda:InvokeAsync"
+          Resource: "*"
+
+
+custom:
+  account: ${opt:account, 'bizdev'}
+  region: ${env:region, 'us-west-2'}
+  stage: ${env:stage, 'dev'}
+  serverless-iam-roles-per-function:
+    defaultInherit: true
+
+package:
+  individually: true
+
+functions:
+  monthyInvoiceUploadToDb: ${file(config/functions/monthyInvoiceUploadToDb.yml):function}
+  monthlyInvoiceReconInsert: ${file(config/functions/monthlyInvoiceReconInsert.yml):function}
+  salesUploadToDb: ${file(config/functions/salesUploadToDb.yml):function}
+  resaReconInsert: ${file(config/functions/resaReconInsert.yml):function}
+layers:
+  SalesDepotLayer:
+    path: lambdaLayer/lib
+    name: NM-Sales-Depot-lambda-layer-${self:provider.stage}
+    description: sales depot lambda layer for all node modules - ${self:provider.stage}
+    compatibleRuntimes:
+      - nodejs16.x
+    retain: false
