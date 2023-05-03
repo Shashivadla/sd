@@ -83,6 +83,8 @@ functions:
   monthlyInvoiceReconInsert: ${file(config/functions/monthlyInvoiceReconInsert.yml):function}
   salesUploadToDb: ${file(config/functions/salesUploadToDb.yml):function}
   resaReconInsert: ${file(config/functions/resaReconInsert.yml):function}
+  getMiData: ${file(config/functions/getMiData.yml):function}
+  
 layers:
   SalesDepotLayer:
     path: lambdaLayer/lib

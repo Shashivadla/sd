@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "aws-sdk": "^2.1369.0",
+    "lodash.get": "^4.4.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

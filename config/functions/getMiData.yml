@@ -1,0 +1,15 @@
+function:
+  name: get-mi-data-api-lambda
+  handler: src/getMiData/index.handler
+  layers:
+    - { Ref: SalesDepotLayerLambdaLayer }
+  package:
+    patterns:
+      - "!**/*"
+      - "src/getMiData/**"
+      - "src/shared/dynamo.js"
+  events:
+    - http:
+        path: /get-mi-data
+        method: get
+        cors: true
